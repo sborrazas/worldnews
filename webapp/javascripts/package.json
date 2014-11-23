@@ -1,0 +1,5 @@
+{
+  "browser": {
+    "React": "./vendor/react.js"
+  }
+}
