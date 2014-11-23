@@ -21,14 +21,14 @@ module Webapp
           halt(res.finish)
         end
 
-        on "javascripts/:name.js" do |name|
+        on "javascripts/:name.js" do |filename|
           # Always respond with javascript content
           res.headers["Content-Type"] = "application/javascript"
-
-          filename = ::Assets::JavascriptCompiler.javascript_asset_path(name)
+          base_dir = File.join(WEBAPP_DIR, "javascripts")
+          filename = "#{filename}.js"
 
           if filename
-            res.write(::Assets::JavascriptCompiler.compile_javascript(filename, true))
+            res.write(::Assets::JavascriptCompiler.compile_javascript(base_dir, filename, true))
           else
             res.status = 404
             res.write("/*\nNot found\n*/\n")

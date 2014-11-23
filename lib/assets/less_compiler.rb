@@ -32,14 +32,14 @@ module Assets
     #     File.open(destination, "w") { |stream| stream.print(content) }
     #   end
     #
-    # @param filenames [Array<String>]
     # @param base_dir [String]
     #   The path where the stylesheets are located.
+    # @param filenames [Array<String>]
     # @param block [Block]
     #   Will recive:
     #     filename [String] Original filename.
     #     content [String] Compiled css.
-    def self.compile_stylesheets(file_paths, base_dir, &block)
+    def self.compile_stylesheets(base_dir, file_paths, &block)
       file_paths.each do |file_path|
         parser = Less::Parser.new(:paths => [base_dir])
         block.call(file_path, parse_stylesheet(parser, file_path, false))

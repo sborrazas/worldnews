@@ -2,55 +2,47 @@ module Assets
   # Handle Javascripts assets compilation using browserify.
   module JavascriptCompiler
 
-    JS_PATH = "assets/javascripts"
-
     # Compile a javascript given a filename
     #
-    # @param filename [String]
+    # @param base_dir [String]
+    #   The directory where the less files are located.
+    # @param file_path [String]
     # @param development [Boolean]
+    #   If true, the file is going to be compiled for development.
     #
     # @return [String]
-    #   The compiled javascript
-    def self.compile_javascript(filename, development)
-      parse_javascript(filename, development)
+    #   The compiled javascript.
+    def self.compile_javascript(base_dir, file_path, development)
+      file_path = File.join(base_dir, file_path)
+      parse_javascript(file_path, development)
     end
 
-    # Compile a list of javascripts
+    # Compile a list of javascripts.
     #
-    # @param filenames [Array<String>]
+    # @param base_dir [String]
+    #   The path where the stylesheets are located.
+    # @param file_paths [Array<String>]
     # @param block [Block]
     #   Will receive:
-    #     filename [String] Original filename
+    #     file_path [String] Original file_path
     #     content [String] Compiled js
-    def self.compile_javascripts(filenames, &block)
-      filenames.each do |filename|
-        block.call(filename, compile_javascript(filename, false))
+    def self.compile_javascripts(base_dir, file_paths, &block)
+      file_paths.each do |file_path|
+        block.call(file_path, parse_javascript(file_path, false))
       end
-    end
-
-    # Find a javascript asset
-    #
-    # @param name [String]
-    #
-    # @return [String]
-    #   nil if the file does not exist
-    def self.javascript_asset_path(name)
-      name = File.basename(name, ".js")
-      filename = "#{JS_PATH}/#{name}.js"
-      File.exists?(filename) && filename
     end
 
     # Use browserify to compile into a javascript output.
     #
-    # @param filename [String]
+    # @param file_path [String]
     # @param development [Boolean]
     #   If false it uglifies the output.
     #
     # @return [String]
-    def self.parse_javascript(filename, development)
+    def self.parse_javascript(file_path, development)
       debug = development ? "-d" : ""
 
-      output = `browserify -t reactify #{debug} #{filename}`
+      output = `browserify -t reactify #{debug} #{file_path}`
 
       if $?.success?
         development ? output : uglify_javascript(output)
