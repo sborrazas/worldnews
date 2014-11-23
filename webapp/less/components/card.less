@@ -1,0 +1,45 @@
+/* card ***********************************************************************/
+.card {
+  .m-borderRadius(5px);
+  .m-boxShadow(1px 2px 5px 0 rgba(0, 0, 0, 0.2));
+  background: @card--backgroundColor;
+  overflow: hidden;
+  width: 32%;
+}
+
+.card-image {
+  img {
+    max-width: 100%;
+  }
+}
+
+.card-content {
+  padding: 20px 25px;
+}
+
+.card-title {
+  .m-fontSize(20px);
+  .m-lineHeight(25px, 20px);
+  text-decoration: none;
+}
+
+.card-description {
+  color: @card-description--color;
+  margin-top: 10px;
+}
+
+.card-footer {
+  .m-clearfix();
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid @card-footer--borderColor;
+}
+
+.card-mainNavItem {
+  .m-lineHeight(25px);
+  float: left;
+}
+
+.card-secondaryNavItem {
+  float: right;
+}
