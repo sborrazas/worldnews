@@ -1,4 +1,3 @@
-require "lib/contexts/extensions/forms"
 require "lib/contexts/extensions/text"
 require "lib/contexts/extensions/webapp_view"
 
@@ -9,7 +8,6 @@ module Contexts
     attr_reader :params
     attr_reader :authenticity_token
 
-    include Contexts::Extensions::Forms
     include Contexts::Extensions::Text
     include Contexts::Extensions::WebappView
 
