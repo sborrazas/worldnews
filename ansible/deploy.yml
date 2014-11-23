@@ -1,0 +1,11 @@
+---
+- hosts: all
+  remote_user: "{{ user }}"
+  sudo_user: "{{ user }}"
+  vars:
+    base_path: "{{ app_dir | dirname }}"
+    repo_version: "master"
+    app_env:
+      GEM_HOME: "/home/{{ user }}/.gems"
+  roles:
+    - role: deploy

@@ -1,0 +1,4 @@
+/ansible/group_vars/development.yml
+.vagrant
+/config/settings.json
+/config/unicorn.rb

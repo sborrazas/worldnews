@@ -1,0 +1,6 @@
+---
+- name: assets | compile assets
+  shell: 'PATH=/home/{{ user }}/npm/bin:"$PATH" rake assets:compile'
+  environment: app_env
+  args:
+    chdir: "{{ release_path }}"

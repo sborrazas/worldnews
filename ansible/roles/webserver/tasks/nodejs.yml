@@ -1,0 +1,40 @@
+---
+- name: nodejs | add node apt repository
+  apt_repository:
+    repo: "ppa:chris-lea/node.js-legacy"
+  sudo: yes
+
+- name: nodejs | install node and npm
+  apt:
+    name: "{{ item }}"
+    state: present
+  sudo: yes
+  with_items:
+    - nodejs
+    - npm
+
+- name: nodejs | hack node bin
+  file:
+    src: /usr/bin/nodejs
+    dest: /usr/bin/node
+    state: link
+  sudo: yes
+
+- name: nodejs | set node config path prefix
+  shell: npm config set prefix "/home/{{ user }}/npm"
+
+- name: nodejs | add node bin to PATH
+  lineinfile:
+    state: present
+    line: "export PATH=$PATH:/home/{{ user }}/npm/bin"
+    dest: "/home/{{ user }}/.bashrc"
+
+- name: nodejs | install browserify and uglify
+  npm:
+    name: "{{ item.name }}"
+    version: "{{ item.version }}"
+    global: yes
+  with_items:
+    - { name: "uglify-js", version: "2.4.14" }
+    - { name: "browserify", version: "4.1.11" }
+    - { name: "reactify", version: "0.15.2" }
