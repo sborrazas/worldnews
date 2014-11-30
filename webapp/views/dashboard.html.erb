@@ -1,0 +1,19 @@
+<% extends("layouts/base.html") %>
+<% vlock(:body) do %>
+  <header class="mainHeader">
+    <div class="contentWrapper">
+      <h1 class="mainHeader-title">Worldnews</h1>
+      <a class="mainHeader-link" href="/">
+        <img src="/images/worldnews.svg" alt="Worldnews" class="mainHeader-logo" />
+      </a>
+      <div class="mainHeader-nav dropdown">
+        <span class="dropdown-toggler">
+          <span class="icon icon--expandMore"></span>
+        </span>
+      </div>
+    </div>
+  </header>
+  <div class="contentWrapper">
+    <div class="js-postsDashboard"></div>
+  </div>
+<% end %>
