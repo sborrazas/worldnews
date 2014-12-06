@@ -1,5 +1,6 @@
 var React = require("React")
   , Post = require("./Post.jsx")
+  , Loader = require("./Loader.jsx")
   , PostsStore = require("../stores/PostsStore.js")
   , collection = require("../utils/collection.js");
 
@@ -21,7 +22,7 @@ module.exports = React.createClass({
       , posts = null;
 
     if (this.state.isLoading) {
-      loader = (<div className="loader"></div>);
+      loader = (<Loader ref="loader" />);
     }
 
     posts = collection.map(this.state.posts, function (post) {
@@ -33,7 +34,7 @@ module.exports = React.createClass({
   _onChange: function () {
     this.setState({
       posts: PostsStore.getPosts(),
-      isLoading:  PostsStore.isLoading()
+      isLoading: PostsStore.isLoading()
     });
   }
 });
