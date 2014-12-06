@@ -51,10 +51,4 @@
   notify:
     - restart nginx
 
-- name: add unicorn config file
-  template:
-    src: "unicorn.rb.j2"
-    dest: "{{ app_dir }}/config/unicorn.rb"
-  when: not app_debug_mode
-
 - include: nodejs.yml
