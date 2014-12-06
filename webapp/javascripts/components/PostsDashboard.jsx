@@ -14,7 +14,7 @@ module.exports = React.createClass({
     if (columnsCount > MAX_COLUMNS) {
       columnsCount = MAX_COLUMNS;
     }
-    else if (columnsCount < 0) {
+    else if (columnsCount <= 0) {
       columnsCount = 1;
     }
 
