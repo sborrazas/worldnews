@@ -11,7 +11,7 @@ module.exports = classes.declare(Base, {
     var self = this
       , subreddit = settings.DEFAULT_SUBREDDIT
       , subredditURL = sprintf(settings.SUBREDDIT_URL, subreddit)
-      , params = { count: settings.POSTS_PER_PAGE }
+      , params = { limit: settings.POSTS_PER_PAGE }
       , posts = null;
 
     if (this._afterToken) {
