@@ -61,7 +61,7 @@ object.extends(store, {
   _getPostInfo: function (post) {
     var self = this;
 
-    postParser.parse(post.url).then(function (info) {
+    postParser.parse(post.url, true).then(function (info) {
       post.description = info.description;
       post.imageURL = info.imageURL;
       self.emit("change");

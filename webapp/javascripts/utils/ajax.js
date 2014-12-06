@@ -1,11 +1,11 @@
 var Promise = require("./Promise.js")
   , window = require("./window.js")
   , serializer = require("./serializer.js")
-  , document = window.document
+  , document = require("./dom/document.js")
+  , json = require("./json.js")
   , XMLHttpRequest = window.XMLHttpRequest
-  , JSON = window.JSON
   , CALLBACKS_PREFIX = "worldnews_"
-  , Math = window.Math
+  , Math = require("./Math.js")
   , doRequest = null;
 
 doRequest = function (method, url) {
@@ -15,7 +15,7 @@ doRequest = function (method, url) {
     request.open(method, url, true);
     request.onload = function () {
       if (request.status >= 200 && request.status < 400) {
-        resolve(JSON.parse(request.responseText));
+        resolve(json.parse(request.responseText));
       }
       else {
         reject();
