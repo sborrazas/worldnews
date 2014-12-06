@@ -21,7 +21,7 @@ object.extends(store, {
     this.off("change", callback);
   },
   _posts: new RedditPosts(),
-  _isLoading: true,
+  _isLoading: false,
   _dispatcherToken: AppDispatcher.register(function (payload) {
     var action = payload.action;
 
@@ -30,18 +30,21 @@ object.extends(store, {
         store._loadNext();
         break;
       case VIEW_ACTIONS.SCROLL_END:
-        if (!this._isLoading) {
-          store._loadNext();
-        }
+        store._loadNext();
         break;
     }
   }),
   _loadNext: function () {
     var self = this
-      , nextPosts = this._posts.loadNext();
+      , nextPosts = null;
+
+    if (self._isLoading) {
+      return;
+    }
 
     self._isLoading = true;
     self.emit("change");
+    nextPosts = this._posts.loadNext();
 
     nextPosts.then(function (posts) {
       collection.each(posts, function (_, post) {
