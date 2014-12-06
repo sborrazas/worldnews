@@ -12,6 +12,7 @@ http {
     include       /etc/nginx/mime.types;
 
     access_log    /var/log/nginx/access.log combined;
+    log_format    compression '$remote_addr [$time_local] $status $body_bytes_sent $bytes_sent $request_time "$request"';
 
     sendfile      on;
     tcp_nopush    on;

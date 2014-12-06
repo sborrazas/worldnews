@@ -1,7 +1,7 @@
 {% if ssl_enabled %}
 server {
   server_name {{ app_domain }};
-  listen 80 default;
+  listen 80;
 
   location / {
     rewrite ^(.*) https://{{ app_domain }}$1 permanent;
@@ -17,18 +17,16 @@ upstream {{ app_name }} {
   {% endif %}
 }
 
-log_format app '$remote_addr [$time_local] $status $body_bytes_sent $bytes_sent $request_time "$request"';
-
 server {
-  server_name {{ app_domain }} 127.0.0.1 localhost;
+  server_name {{ app_domain }} 127.0.0.1;
 
   error_page 500 /500.html;
   proxy_intercept_errors off;
 
   {% if ssl_enabled %}
-  listen 443 default_server ssl;
+  listen 443 ssl;
   {% else %}
-  listen 80 default;
+  listen 80;
   {% endif %}
   access_log "/var/log/nginx/{{ app_name }}.log";
   error_log "/var/log/nginx/{{ app_name }}-error.log";

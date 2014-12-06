@@ -97,11 +97,12 @@
     owner: "{{ user }}"
   sudo: yes
 
-- name: setup logs folder
+- name: setup logs directory
   file:
     path: "{{ logs_dir }}"
     state: directory
     group: "{{ user }}"
     owner: "{{ user }}"
+  sudo: yes
 
 - include: hostname.yml
