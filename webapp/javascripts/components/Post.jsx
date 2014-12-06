@@ -1,13 +1,21 @@
-var React = require("React");
+var React = require("React")
+  , MARGIN_WIDTH = 10;
 
 module.exports = React.createClass({
+  getInitialState: function () {
+    return {
+      columnIndex: 0,
+      spacingTop: 0
+    };
+  },
   render: function () {
     var post = this.props.post
-      , postFigure = null;
+      , postFigure = null
+      , style = null;
 
     if (post.imageURL) {
       postFigure = (
-        <figure className="card-figure">
+        <figure className="card-figure" ref="figure">
           <a href={post.url}>
             <img className="card-image" src={post.imageURL} alt={post.title} />
           </a>
@@ -15,10 +23,16 @@ module.exports = React.createClass({
       );
     }
 
+    style = {
+      width: (this.props.width - MARGIN_WIDTH * 2),
+      left: (this.state.columnIndex * this.props.width),
+      top: this.state.spacingTop
+    };
+
     return (
-      <article className="cardDashboard-item card">
+      <article className="cardDashboard-item card" style={style}>
         {postFigure}
-        <div className="card-content">
+        <div className="card-content" ref="content">
           <header>
             <a className="card-title" href={post.url}>
               <h2>{post.title}</h2>
@@ -40,5 +54,20 @@ module.exports = React.createClass({
         </div>
       </article>
     );
+  },
+  getHeight: function () {
+    var height = this.refs["content"].getDOMNode().offsetHeight
+      , figure = this.refs["figure"];
+
+    height += MARGIN_WIDTH * 2
+
+    if (figure) {
+      height += figure.getDOMNode().offsetHeight;
+    }
+
+    return height;
+  },
+  setLayoutPosition: function (columnIndex, spacingTop) {
+    this.setState({ columnIndex: columnIndex, spacingTop: spacingTop });
   }
 });

@@ -2,13 +2,19 @@ var React = require("React")
   , Post = require("./Post.jsx")
   , Loader = require("./Loader.jsx")
   , PostsStore = require("../stores/PostsStore.js")
-  , collection = require("../utils/collection.js");
+  , collection = require("../utils/collection.js")
+  , Math = require("../utils/Math.js")
+  , MIN_POST_WIDTH = 310 // px
+  , MAX_COLUMNS = 3
 
 module.exports = React.createClass({
   getInitialState: function () {
+    var columnsCount = Math.floor(this.props.containerWidth / MIN_POST_WIDTH);
+
     return {
       posts: PostsStore.getPosts(),
-      isLoading: PostsStore.isLoading()
+      isLoading: PostsStore.isLoading(),
+      columnsCount: columnsCount > MAX_COLUMNS ? MAX_COLUMNS : columnsCount
     };
   },
   componentDidMount: function () {
@@ -17,16 +23,22 @@ module.exports = React.createClass({
   componentWillUnmount: function () {
     PostsStore.removeOnChangeListener(this._onChange);
   },
+  shouldComponentUpdate: function () {
+    this._sortCardsPositioning();
+
+    return true;
+  },
   render: function () {
     var loader = null
-      , posts = null;
+      , posts = null
+      , cardWidth = this._getCardWidth();
 
     if (this.state.isLoading) {
       loader = (<Loader ref="loader" />);
     }
 
     posts = collection.map(this.state.posts, function (post) {
-      return (<Post post={post} key={post.id} />);
+      return (<Post post={post} ref={post.id} key={post.id} width={cardWidth} />);
     });
 
     return (<div><div className="cardDashboard">{posts}</div>{loader}</div>);
@@ -36,5 +48,46 @@ module.exports = React.createClass({
       posts: PostsStore.getPosts(),
       isLoading: PostsStore.isLoading()
     });
+  },
+  _sortCardsPositioning: function () {
+    var self = this
+      , positionY = 0
+      , columnsCount = this.state.columnsCount
+      , columnMaxY = []
+      , longestColumn = 0
+      , loader = self.refs["loader"];
+
+    collection.eachInRange(0, columnsCount, function (_) {
+      columnMaxY.push(0);
+    });
+
+    // Posts
+    collection.each(self.state.posts, function (_, post) {
+      var postEl = self.refs[post.id]
+        , shortestColumn = 0;
+
+      collection.eachInRange(1, columnsCount, function (column) {
+        if (columnMaxY[column] < columnMaxY[shortestColumn]) {
+          shortestColumn = column;
+        }
+      });
+
+      postEl.setLayoutPosition(shortestColumn, columnMaxY[shortestColumn]);
+      columnMaxY[shortestColumn] += postEl.getHeight();
+    });
+
+    // Loader
+    if (loader) {
+      collection.eachInRange(1, columnsCount, function (column) {
+        if (columnMaxY[column] > columnMaxY[longestColumn]) {
+          longestColumn = column;
+        }
+      });
+
+      loader.setLayoutPosition(columnMaxY[longestColumn]);
+    }
+  },
+  _getCardWidth: function () {
+    return Math.floor(this.props.containerWidth / this.state.columnsCount);
   }
 });

@@ -26,5 +26,12 @@ module.exports = {
     });
 
     return acc;
+  },
+  eachInRange: function (start, end, fn) {
+    var i = start;
+
+    for (; i < end; i += 1) {
+      fn.call(null, i);
+    }
   }
 };
