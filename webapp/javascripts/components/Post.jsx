@@ -1,4 +1,6 @@
 var React = require("React")
+  , on = require("../utils/dom/on.js")
+  , domStyle = require("../utils/dom/style.js")
   , MARGIN_WIDTH = 10;
 
 module.exports = React.createClass({
@@ -17,7 +19,8 @@ module.exports = React.createClass({
       postFigure = (
         <figure className="card-figure" ref="figure">
           <a href={post.url}>
-            <img className="card-image" src={post.imageURL} alt={post.title} />
+            <img className="card-image" src={post.imageURL} alt={post.title}
+                 ref="image" />
           </a>
         </figure>
       );
@@ -69,5 +72,27 @@ module.exports = React.createClass({
   },
   setLayoutPosition: function (columnIndex, spacingTop) {
     this.setState({ columnIndex: columnIndex, spacingTop: spacingTop });
+  },
+  componentDidUpdate: function () {
+    var self = this
+      , image = this.refs["image"]
+      , imageEl = null;
+
+    if (image) {
+      imageEl = image.getDOMNode();
+      on(imageEl, "load", function () {
+        self._repositionImage();
+      });
+      if (imageEl.complete) {
+        self._repositionImage();
+      }
+    }
+  },
+  _repositionImage: function () {
+    var figureHeight = this.refs["figure"].getDOMNode().offsetHeight
+      , imageEl = this.refs["image"].getDOMNode()
+      , heightDifference = figureHeight - imageEl.offsetHeight;
+
+    domStyle.set(imageEl, "marginTop", (heightDifference / 2) + "px");
   }
 });
