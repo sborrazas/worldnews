@@ -18,7 +18,7 @@ module.exports = React.createClass({
     if (post.imageURL) {
       postFigure = (
         <figure className="card-figure" ref="figure">
-          <a href={post.url}>
+          <a href={post.url} target="_blank">
             <img className="card-image" src={post.imageURL} alt={post.title}
                  ref="image" />
           </a>
@@ -37,7 +37,7 @@ module.exports = React.createClass({
         {postFigure}
         <div className="card-content" ref="content">
           <header>
-            <a className="card-title" href={post.url}>
+            <a className="card-title" href={post.url} target="_blank">
               <h2>{post.title}</h2>
             </a>
           </header>
@@ -50,7 +50,9 @@ module.exports = React.createClass({
                 </a>
               </li>
               <li className="card-secondaryNavItem">
-                <a className="tag" href={post.domainURL}>{post.domainSlug}</a>
+                <a className="tag" href={post.domainURL} target="_blank">
+                  {post.domainSlug}
+                </a>
               </li>
             </ul>
           </footer>
