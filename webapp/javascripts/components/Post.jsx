@@ -28,7 +28,7 @@ module.exports = React.createClass({
 
     style = {
       width: (this.props.width - MARGIN_WIDTH * 2),
-      left: (this.state.columnIndex * this.props.width),
+      left: (this.state.columnIndex * this.props.width + MARGIN_WIDTH),
       top: this.state.spacingTop
     };
 

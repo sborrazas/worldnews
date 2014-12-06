@@ -11,10 +11,17 @@ module.exports = React.createClass({
   getInitialState: function () {
     var columnsCount = Math.floor(this.props.containerWidth / MIN_POST_WIDTH);
 
+    if (columnsCount > MAX_COLUMNS) {
+      columnsCount = MAX_COLUMNS;
+    }
+    else if (columnsCount < 0) {
+      columnsCount = 1;
+    }
+
     return {
       posts: PostsStore.getPosts(),
       isLoading: PostsStore.isLoading(),
-      columnsCount: columnsCount > MAX_COLUMNS ? MAX_COLUMNS : columnsCount
+      columnsCount: columnsCount
     };
   },
   componentDidMount: function () {
@@ -23,10 +30,8 @@ module.exports = React.createClass({
   componentWillUnmount: function () {
     PostsStore.removeOnChangeListener(this._onChange);
   },
-  shouldComponentUpdate: function () {
+  componentDidUpdate: function () {
     this._sortCardsPositioning();
-
-    return true;
   },
   render: function () {
     var loader = null
