@@ -45,7 +45,7 @@ module.exports = React.createClass({
           <footer className="card-footer">
             <ul>
               <li className="card-mainNavItem">
-                <a className="link" href={post.redditURL}>
+                <a className="link" href={post.redditURL} target="_blank">
                   {post.commentsCount} comments
                 </a>
               </li>
