@@ -59,7 +59,7 @@
 - name: store private key
   template:
     src: "private_key.j2"
-    dest: "/home/{{ user }}/.ssh/id_rsa"
+    dest: "/home/{{ user }}/.ssh/{{ app_name }}_rsa"
     mode: 0600
   sudo: yes
   sudo_user: "{{ user }}"
@@ -67,7 +67,7 @@
 - name: store public key
   template:
     src: "public_key.j2"
-    dest: "/home/{{ user }}/.ssh/id_rsa.pub"
+    dest: "/home/{{ user }}/.ssh/{{ app_name }}_rsa.pub"
     mode: 0600
   sudo: yes
   sudo_user: "{{ user }}"
@@ -79,6 +79,16 @@
     creates: "/home/{{ user }}/.ssh/authorized_keys"
   sudo: yes
   sudo_user: "{{ user }}"
+
+- name: ensure ssh config to github is set
+  lineinfile:
+    dest: "/home/{{ user }}/.ssh/config"
+    line: "Host {{ app_name }}.github.com\n HostName github.com\n User git\n IdentityFile /home/{{ user }}/.ssh/{{ app_name }}_rsa"
+    state: present
+    create: yes
+    group: "{{ user }}"
+    owner: "{{ user }}"
+  sudo: yes
 
 - name: ensure authorized_keys file permission
   file:

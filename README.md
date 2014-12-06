@@ -99,6 +99,9 @@ $ ansible-vault edit ansible/group_vars/production.yml
 Make sure you have the `~/.ssh/authorized_keys` file with your public key on the
 root user first.
 
+Also, make sure you add the public key from the config to the GitHub deploy
+keys.
+
 To run the provision you now need to run the ansible provision playbook. Before
 running it, check that the hosts list affected are the ones desired:
 ```
