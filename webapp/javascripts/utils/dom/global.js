@@ -14,9 +14,14 @@ module.exports = {
 
     on(document, "scroll", function (event) {
       var SCROLL_TRIGGER_DISTANCE = 100 // px
-        , bottomPosition = body.scrollTop + body.clientHeight;
+        , bottomPosition = body.clientHeight + SCROLL_TRIGGER_DISTANCE;;
 
-      bottomPosition += SCROLL_TRIGGER_DISTANCE;
+      if (document.documentElement.scrollTop > body.scrollTop) {
+        bottomPosition += document.documentElement.scrollTop;
+      }
+      else {
+        bottomPosition += body.scrollTop;
+      }
 
       if (bottomPosition > body.scrollHeight) {
         handler.call(body, event);
