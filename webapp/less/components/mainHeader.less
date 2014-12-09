@@ -1,7 +1,5 @@
 /* mainHeader *****************************************************************/
 .mainHeader {
-  height: 80px;
-  line-height: 79px;
   margin: 40px 0;
   text-align: center;
 }
@@ -10,10 +8,15 @@
   display: none;
 }
 
+.mainHeader-tagline {
+  .m-lineHeight(23px);
+  color: @mainHeader-tagline--color;
+  margin: 15px auto;
+  max-width: 300px;
+}
+
 .mainHeader-link {
   display: inline-block;
-  height: 79px;
-  margin-right: 10px;
   max-width: 79px;
   vertical-align: middle;
 }
@@ -21,9 +24,4 @@
 .mainHeader-logo {
   height: 80px;
   width: 80px;
-}
-
-.mainHeader-nav {
-  display: inline-block;
-  vertical-align: middle;
 }
