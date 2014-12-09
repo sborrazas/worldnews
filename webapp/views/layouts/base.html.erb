@@ -13,5 +13,8 @@
     <% vlock(:body) %>
 
     <script src="/javascripts/application.js"></script>
+    <% unless development? %>
+      <%== render("shared/analytics.html") %>
+    <% end %>
   </body>
 </html>

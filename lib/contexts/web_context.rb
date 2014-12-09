@@ -22,5 +22,9 @@ module Contexts
       @authenticity_token = options.fetch(:authenticity_token, nil)
     end
 
+    def development?
+      Worldnews::Settings::ENVIRONMENT == "development"
+    end
+
   end
 end
