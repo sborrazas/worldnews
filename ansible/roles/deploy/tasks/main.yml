@@ -4,7 +4,7 @@
 
 - set_fact:
     release_path:
-      "{% if app_debug_mode %}{{ app_dir }}{% else %}{{ base_path }}/releases/{{ release_version }}{% endif %}"
+      "{% if app_debug_mode %}{{ app_dir }}{% else %}{{ base_dir }}/releases/{{ release_version }}{% endif %}"
 
 - include: remote-fetch.yml
   when: not app_debug_mode

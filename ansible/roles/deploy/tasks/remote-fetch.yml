@@ -3,20 +3,20 @@
   file:
     state: directory
     recurse: yes
-    path: "{{ base_path }}"
+    path: "{{ base_dir }}"
   sudo: yes
 
 - name: remote-fetch | make sure releases folder exists
   file:
     state: directory
     recurse: yes
-    path: "{{ base_path }}/releases"
+    path: "{{ base_dir }}/releases"
 
 - name: remote-fetch | make sure logs folder exists
   file:
     state: directory
     recurse: yes
-    path: "{{ base_path }}/logs"
+    path: "{{ base_dir }}/logs"
 
 - name: remote-fetch | make sure unicorn tmp folder exists
   file:
