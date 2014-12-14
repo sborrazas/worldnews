@@ -53,6 +53,11 @@ module.exports = {
         scriptEl.remove();
         delete window[callbackName];
       });
+      scriptEl.addEventListener("error", function () {
+        scriptEl.remove();
+        delete window[callbackName];
+        reject();
+      });
 
       document.body.appendChild(scriptEl);
     });

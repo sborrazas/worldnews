@@ -37,6 +37,8 @@ module.exports = {
         description: postOGData.description,
         imageURL: postOGData.image
       };
+    }, function () {
+      return {};
     });
   }
 };
