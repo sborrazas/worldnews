@@ -24,9 +24,6 @@ $ vagrant up
 
 Make sure no errors come up before proceeding.
 
-Note: it is recommended to add more RAM to the VM through Virtualbox to run the
-app.
-
 You may now get into the VM by running `vagrant ssh`. Vagrant access the repo
 from `/vagrant`. However, an easier way to start the server is with the
 included script:
@@ -40,21 +37,6 @@ Whenever new gems are added to the `.gems` file, you can update them inside the
 vagrant VM by running the provisioning:
 ```
 $ vagrant provision
-```
-
-### Running new migrations
-
-To run new migrations you can run the vagrant provisioning:
-```
-$ vagrant provision
-```
-
-To be able to rollback or move to a specific migration, you would need to go
-inside the vagrant VM and run the rake db commands accordingly:
-```
-$ vagrant ssh
-$ cd /vagrant
-$ rake db:migrate[3]
 ```
 
 ### Adding new settings
