@@ -32,6 +32,9 @@ server {
   error_log "/var/log/nginx/{{ app_name }}-error.log";
 
   root "{{ app_dir }}/public/";
+  {% if app_debug_mode %}
+  sendfile off;
+  {% endif %}
 
   error_page 502 /502.html;
   location = /502.html {
