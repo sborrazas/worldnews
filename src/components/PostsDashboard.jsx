@@ -7,6 +7,8 @@ var React = require("React")
   , MIN_POST_WIDTH = 310 // px
   , MAX_COLUMNS = 3
 
+require("./styles/application.less");
+
 module.exports = React.createClass({
   getInitialState: function () {
     var columnsCount = Math.floor(this.props.containerWidth / MIN_POST_WIDTH);

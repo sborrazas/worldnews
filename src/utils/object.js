@@ -1,5 +1,7 @@
 module.exports = {
   each: function (obj, iterator) {
+    var key;
+
     for (key in obj) {
       if (obj.hasOwnProperty(key)) {
         iterator.call(null, key, obj[key]);

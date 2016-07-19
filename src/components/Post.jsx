@@ -61,13 +61,13 @@ module.exports = React.createClass({
     );
   },
   getHeight: function () {
-    var height = this.refs["content"].getDOMNode().offsetHeight
+    var height = this.refs["content"].offsetHeight
       , figure = this.refs["figure"];
 
     height += MARGIN_WIDTH * 2
 
     if (figure) {
-      height += figure.getDOMNode().offsetHeight;
+      height += figure.offsetHeight;
     }
 
     return height;
@@ -77,24 +77,22 @@ module.exports = React.createClass({
   },
   componentDidUpdate: function () {
     var self = this
-      , image = this.refs["image"]
-      , imageEl = null;
+      , image = this.refs["image"];
 
     if (image) {
-      imageEl = image.getDOMNode();
-      on(imageEl, "load", function () {
+      on(image, "load", function () {
         self._repositionImage();
       });
-      if (imageEl.complete) {
+      if (image.complete) {
         self._repositionImage();
       }
     }
   },
   _repositionImage: function () {
-    var figureHeight = this.refs["figure"].getDOMNode().offsetHeight
-      , imageEl = this.refs["image"].getDOMNode()
-      , heightDifference = figureHeight - imageEl.offsetHeight;
+    var figureHeight = this.refs["figure"].offsetHeight
+      , image = this.refs["image"]
+      , heightDifference = figureHeight - image.offsetHeight;
 
-    domStyle.set(imageEl, "marginTop", (heightDifference / 2) + "px");
+    domStyle.set(image, "marginTop", (heightDifference / 2) + "px");
   }
 });
