@@ -1,0 +1,33 @@
+---
+- name: Assures /etc/nginx/ssl dir exists
+  file:
+    path: /etc/nginx/ssl
+    state: directory
+  become_method: sudo
+
+- name: create ssl certificate file
+  template:
+    src: "ssl.crt.j2"
+    dest: "/etc/nginx/ssl/{{ app_domain }}.crt"
+    mode: 0600
+  become_method: sudo
+  notify:
+    - restart nginx
+
+- name: create ssl private key file
+  template:
+    src: "ssl.key.j2"
+    dest: "/etc/nginx/ssl/{{ app_domain }}.key"
+    mode: 0600
+  become_method: sudo
+  notify:
+    - restart nginx
+
+- name: create ssl chain file
+  template:
+    src: "ssl_chain.crt.j2"
+    dest: "/etc/nginx/ssl/{{ app_domain }}_chain.crt"
+    mode: 0600
+  become_method: sudo
+  notify:
+    - restart nginx

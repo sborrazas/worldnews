@@ -1,2 +1,5 @@
 ---
-  app_name: worldnews
+  app_name: "worldnews"
+  app_dir: "{{ base_dir }}/current"
+  private_key_path: "/home/{{ user }}/.ssh/{{ app_name }}_rsa"
+  public_key_path: "{{ private_key_path }}.pub"

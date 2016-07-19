@@ -1,0 +1,56 @@
+---
+- name: create group
+  group:
+    name: "{{ user }}"
+    state: present
+  become: yes
+  become_method: sudo
+
+- name: sudoers.d is enabled
+  lineinfile:
+    dest: "/etc/sudoers"
+    state: present
+    backup: yes
+    regexp: "^#includedir /etc/sudoers.d"
+    line: "#includedir /etc/sudoers.d"
+  become: yes
+  become_method: sudo
+
+- name: password-less sudo for group set up
+  template:
+    src: "sudoers.j2"
+    dest: "/etc/sudoers.d/{{ user }}"
+    owner: root
+    group: root
+    mode: 0440
+  become: yes
+  become_method: sudo
+
+- name: user created
+  user:
+    name: "{{ user }}"
+    home: "/home/{{ user }}"
+    createhome: yes
+    state: present
+    shell: "/bin/bash"
+    group: "{{ user }}"
+  become: yes
+  become_method: sudo
+
+- name: owner of /tmp
+  file:
+    path: /tmp
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ user }}"
+  become: yes
+  become_method: sudo
+
+- name: owner of /srv/apps
+  file:
+    path: "/srv/apps"
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ user }}"
+  become: yes
+  become_method: sudo

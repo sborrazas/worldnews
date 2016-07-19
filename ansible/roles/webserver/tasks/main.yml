@@ -3,13 +3,15 @@
   apt:
     name: nginx-extras
     state: installed
-  sudo: yes
+  become: yes
+  become_method: sudo
 
 - name: write nginx.conf
   template:
     src: "nginx.conf.j2"
     dest: "/etc/nginx/nginx.conf"
-  sudo: yes
+  become: yes
+  become_method: sudo
   notify:
     - restart nginx
 
@@ -17,7 +19,8 @@
   file:
     path: "/etc/nginx/sites-enabled/default"
     state: absent
-  sudo: yes
+  become: yes
+  become_method: sudo
   notify:
     - restart nginx
 
@@ -32,13 +35,15 @@
     enabled: yes
     state: started
     pattern: "master process /usr/sbin/nginx"
-  sudo: yes
+  become: yes
+  become_method: sudo
 
 - name: setup nginx for app
   template:
     src: "nginx-site.conf.j2"
     dest: "/etc/nginx/sites-available/{{ app_name }}.conf"
-  sudo: yes
+  become: yes
+  become_method: sudo
   notify:
     - restart nginx
 
@@ -47,8 +52,10 @@
     src: "/etc/nginx/sites-available/{{ app_name }}.conf"
     dest: "/etc/nginx/sites-enabled/{{ app_name }}.conf"
     state: link
-  sudo: yes
+  become: yes
+  become_method: sudo
   notify:
     - restart nginx
 
-- include: nodejs.yml
+- include: ssl.yml
+  when: ssl_enabled

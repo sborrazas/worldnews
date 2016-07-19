@@ -1,4 +1,0 @@
----
-webserver_socket_path: "/tmp/unicorn.{{ app_name }}.sock"
-webserver_pid_path: "/tmp/unicorn.{{ app_name }}.pid"
-webserver_workers: "{{ webserver_workers_number | default(3) }}"

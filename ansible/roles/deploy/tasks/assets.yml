@@ -1,6 +1,15 @@
 ---
-- name: assets | compile assets
-  shell: 'PATH=/home/{{ user }}/npm/bin:"$PATH" rake assets:compile'
-  environment: app_env
-  args:
-    chdir: "{{ release_path }}"
+- name: assets | compile assets locally
+  local_action: command npm run dist
+  tags:
+    - remote
+
+- name: assets | upload assets
+  copy:
+    src: "{{ local_app_dir }}/public/{{ item }}"
+    dest: "{{ release_dir }}/public/{{ item }}"
+  with_items:
+    - "index.js"
+    - "stylesheets/main.css"
+  tags:
+    - remote

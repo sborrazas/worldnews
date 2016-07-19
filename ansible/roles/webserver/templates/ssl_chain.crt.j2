@@ -1,0 +1,5 @@
+-----BEGIN CERTIFICATE-----
+{% for line in ssl_chain_certificate %}
+{{ line }}
+{% endfor %}
+-----END CERTIFICATE-----

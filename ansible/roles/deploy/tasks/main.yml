@@ -3,29 +3,25 @@
     release_version: "{{ lookup('pipe', 'date +%Y%m%d%H%M%S') }}"
 
 - set_fact:
-    release_path:
-      "{% if app_debug_mode %}{{ app_dir }}{% else %}{{ base_dir }}/releases/{{ release_version }}{% endif %}"
+    release_dir: "{{ base_dir }}/current"
+
+- set_fact:
+    release_dir: "{{ base_dir }}/releases/{{ release_version }}"
+  tags:
+    - remote
 
 - include: remote-fetch.yml
-  when: not app_debug_mode
+  tags:
+    - remote
 
-- name: add project settings
-  template:
-    src: "settings.json.j2"
-    dest: "{{ release_path }}/config/settings.json"
-
-- name: add unicorn config file
-  template:
-    src: "unicorn.rb.j2"
-    dest: "{{ release_path }}/config/unicorn.rb"
-  when: not app_debug_mode
-
-- include: gems.yml
 - include: assets.yml
-  when: not app_debug_mode
+  tags:
+    - remote
 
-- include: remote-stop.yml
-  when: not app_debug_mode
-
-- include: remote-start.yml
-  when: not app_debug_mode
+- name: symlink to app directoy exists
+  file:
+    state: link
+    src: "{{ release_dir }}"
+    dest: "{{ app_dir }}"
+  tags:
+    - remote

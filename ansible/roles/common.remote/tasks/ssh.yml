@@ -1,0 +1,58 @@
+---
+- name: ssh | ssh dir exists
+  file:
+    dest: "/home/{{ user }}/.ssh"
+    state: directory
+  become: yes
+  become_method: sudo
+  become_user: "{{ user }}"
+
+- name: ssh | private key stored
+  template:
+    src: "private_key.j2"
+    dest: "{{ private_key_path }}"
+    mode: 0600
+  become: yes
+  become_method: sudo
+  become_user: "{{ user }}"
+
+- name: ssh | public key stored
+  template:
+    src: "public_key.j2"
+    dest: "{{ private_key_path }}.pub"
+    content: "{{ public_key }} "
+    mode: 0600
+  become: yes
+  become_method: sudo
+  become_user: "{{ user }}"
+
+- name: ssh | authorized_keys from root_user copied
+  command:
+    cp "/home/{{ root_user }}/.ssh/authorized_keys" "/home/{{ user }}/.ssh/authorized_keys"
+  args:
+    creates: "/home/{{ user }}/.ssh/authorized_keys"
+  become: yes
+  become_method: sudo
+  become_user: "{{ user }}"
+
+- name: ssh | ssh config to github is set
+  ssh_config:
+    host: "{{ app_name }}.github.com"
+    hostname: "github.com"
+    identity_file: "{{ private_key_path }}"
+    remote_user: "git"
+    strict_host_key_checking: "no"
+    user: "{{ user }}"
+    state: present
+  become: yes
+  become_method: sudo
+  become_user: "{{ user }}"
+
+- name: ssh | authorized_keys file permission
+  file:
+    path: "/home/{{ user }}/.ssh/authorized_keys"
+    group: "{{ user }}"
+    owner: "{{ user }}"
+  become: yes
+  become_method: sudo
+  become_user: "{{ user }}"
