@@ -77,7 +77,7 @@ class StaticApp extends Component {
               </a>
               <h2 className="mainHeader-tagline">
                 Enjoy the most popular news of the day curated by the
-                <a className="link" href="http://www.reddit.com/r/worldnews/" target="_blank">Reddit Community</a>.
+                {" "}<a className="link" href="http://www.reddit.com/r/worldnews/" target="_blank">Reddit Community</a>.
                 Made by <a className="link" href="http://fandf.io/" target="_blank">Form &amp; Function</a>.
               </h2>
             </div>
