@@ -6,7 +6,9 @@ import { OPEN_GRAPH_URL, OPEN_GRAPH_APP_ID } from "config/settings.js";
 const getMetadata = (url) => {
   const encodedURL = serializer.encodeURI(url)
   const openGraphURL = sprintf(OPEN_GRAPH_URL, encodedURL);
-  const pageContent = ajax.getCrossOrigin(openGraphURL);
+  const pageContent = ajax.getCrossOrigin(openGraphURL, {
+    app_id: OPEN_GRAPH_APP_ID,
+  });
 
   return pageContent.then(function (content) {
     var postOGData = content.openGraph;
