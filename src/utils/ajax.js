@@ -1,21 +1,17 @@
-var Promise = require("./Promise.js")
-  , window = require("./window.js")
-  , serializer = require("./serializer.js")
-  , document = require("./dom/document.js")
-  , json = require("./json.js")
-  , XMLHttpRequest = window.XMLHttpRequest
-  , CALLBACKS_PREFIX = "worldnews_"
-  , Math = require("./Math.js")
-  , doRequest = null;
+import serializer from "./serializer.js";
 
-doRequest = function (method, url) {
+const CALLBACKS_PREFIX = "worldnews_";
+
+const doRequest = function (method, url, params) {
   return new Promise(function (resolve, reject) {
     var request = new XMLHttpRequest();
+
+    url = serializer.encodeURL(url, params);
 
     request.open(method, url, true);
     request.onload = function () {
       if (request.status >= 200 && request.status < 400) {
-        resolve(json.parse(request.responseText));
+        resolve(JSON.parse(request.responseText));
       }
       else {
         reject();
@@ -29,12 +25,12 @@ doRequest = function (method, url) {
   });
 };
 
-module.exports = {
-  get: function (url) {
-    return doRequest("GET", url);
+export default {
+  get: (url, params) => {
+    return doRequest("GET", url, params);
   },
-  getCrossOrigin: function (url, params) {
-    return new Promise(function (resolve, reject) {
+  getCrossOrigin: (url, params) => {
+    return new Promise((resolve, reject) => {
       var scriptEl = document.createElement("script")
         , randomSuffix = Math.floor(Math.random() * 100000000)
         , callbackName = CALLBACKS_PREFIX + randomSuffix;
@@ -43,17 +39,17 @@ module.exports = {
       params.callback = callbackName;
       url = serializer.encodeURL(url, params);
 
-      window[callbackName] = function (data) {
+      window[callbackName] = (data) => {
         resolve(data);
       };
 
       scriptEl.async = true;
       scriptEl.src = url;
-      scriptEl.addEventListener("load", function () {
+      scriptEl.addEventListener("load", () => {
         scriptEl.remove();
         delete window[callbackName];
       });
-      scriptEl.addEventListener("error", function () {
+      scriptEl.addEventListener("error", () => {
         scriptEl.remove();
         delete window[callbackName];
         reject();

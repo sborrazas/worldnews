@@ -1,17 +1,23 @@
-var React = require("React");
+import React, { Component } from "react";
 
-module.exports = React.createClass({
-  getInitialState: function () {
-    return {
-      spacingTop: 0
+class Loader extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      spacingTop: 0,
     };
-  },
-  render: function () {
+  }
+  render() {
     var style = { top: this.state.spacingTop };
 
-    return (<div className="loader" style={style}></div>);
-  },
-  setLayoutPosition: function (spacingTop) {
+    return (
+      <div className="loader" style={style}></div>
+    );
+  }
+  setLayoutPosition(spacingTop) {
     this.setState({ spacingTop: spacingTop });
   }
-});
+}
+
+export default Loader;

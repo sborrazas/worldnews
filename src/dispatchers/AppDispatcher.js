@@ -1,14 +1,13 @@
-var object = require("../utils/object.js")
-  , Dispatcher = require("../utils/Dispatcher.js")
-  , dispatcher = new Dispatcher();
+import object from "utils/object.js";
+import Dispatcher from "utils/Dispatcher.js";
 
-object.extends(dispatcher, {
-  handleViewAction: function (action) {
-    this.dispatch({
-      source: "VIEW_ACTION",
-      action: action
-    });
-  }
-});
+const dispatcher = new Dispatcher();
 
-module.exports = dispatcher;
+dispatcher.handleViewAction = (action) => {
+  dispatcher.dispatch({
+    source: "VIEW_ACTION",
+    action: action
+  });
+};
+
+export default dispatcher;

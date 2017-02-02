@@ -1,9 +1,7 @@
-var classes = require("./classes.js")
-  , collection = require("./collection.js")
-  , Array = require("./window.js").Array
-  , EventEmitter = null;
+import classes from "./classes.js";
+import collection from "./collection.js";
 
-EventEmitter = classes.declare(null, {
+const EventEmitter = classes.declare(null, {
   on: function (event, fn) {
     this._getCallbacks(event).push(fn);
   },
@@ -26,6 +24,6 @@ EventEmitter = classes.declare(null, {
   }
 });
 
-module.exports = {
-  EventEmitter: EventEmitter
+export {
+  EventEmitter,
 };

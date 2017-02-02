@@ -1,20 +1,19 @@
-var window = require("../window.js")
-  , on = require("./on.js")
-  , document = require("./document.js");
+import on from "./on.js";
 
-module.exports = {
-  onInit: function (handler) {
+const SCROLL_TRIGGER_DISTANCE = 100 // px
+
+export default {
+  onInit: (handler) => {
     handler.call(window);
   },
-  onLocalStorageChange: function (handler) {
-    on(window, "storage", handler);
+  onLocalStorageChange: (handler) => {
+    on(global, "storage", handler);
   },
-  onScrollReachBottom: function (handler) {
+  onScrollReachBottom: (handler) => {
     var body = document.body;
 
-    on(document, "scroll", function (event) {
-      var SCROLL_TRIGGER_DISTANCE = 100 // px
-        , bottomPosition = body.clientHeight + SCROLL_TRIGGER_DISTANCE;;
+    on(document, "scroll", (event) => {
+      let bottomPosition = body.clientHeight + SCROLL_TRIGGER_DISTANCE;;
 
       if (document.documentElement.scrollTop > body.scrollTop) {
         bottomPosition += document.documentElement.scrollTop;

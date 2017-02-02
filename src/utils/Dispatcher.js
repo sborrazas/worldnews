@@ -1,17 +1,14 @@
-var classes = require("./classes.js")
-  , Promise = require("./Promise.js")
-  , collection = require("./collection.js")
-  , console = require("./console.js");
+import collection from "./collection.js";
 
-module.exports = classes.declare(null, {
-  register: function (callback) {
+class Dispatcher {
+  register(callback) {
     var callbacks = this._getCallbacks();
 
     callbacks.push(callback);
 
     return callbacks.length - 1;
-  },
-  dispatch: function (payload) {
+  }
+  dispatch(payload) {
     var callbacks = null
       , promises = null
       , resolves = {}
@@ -27,26 +24,28 @@ module.exports = classes.declare(null, {
     callbacks = this._getCallbacks();
     promises = this._getPromises();
 
-    collection.each(callbacks, function (index) {
+    collection.each(callbacks, (index) => {
       if (!promises[index]) {
-        promises[index] = new Promise(function (resolve, reject) {
+        promises[index] = new Promise((resolve, reject) => {
           resolves[index] = resolve;
           rejects[index] = reject;
         });
       }
     });
 
-    collection.each(callbacks, function (index, callback) {
-      Promise.resolve(callback(payload)).then(function () {
-        resolves[index](true);
-      }, function () {
+    collection.each(callbacks, (index, callback) => {
+      Promise.resolve(callback(payload)).then(() => {
+        if (resolves[index]) {
+          resolves[index](true);
+        }
+      }, () => {
         rejects[index](new Error("Dispatcher callback unsuccessful"));
       });
     });
 
     this._isDispatching = false;
-  },
-  waitFor: function (tokens) {
+  }
+  waitFor(tokens) {
     var promises = null
       , selectedPromises;
 
@@ -56,16 +55,18 @@ module.exports = classes.declare(null, {
     }
 
     promises = this._getPromises();
-    collection.each(tokens, function (_, token) {
+    collection.each(tokens, (_, token) => {
       selectedPromises.push(promises[token]);
     });
 
     return Promise.all(selectedPromises);
-  },
-  _getCallbacks: function () {
+  }
+  _getCallbacks() {
     return (this._callbacks = this._callbacks || []);
-  },
-  _getPromises: function () {
+  }
+  _getPromises() {
     return (this._promises = this._promises || {});
   }
-});
+};
+
+export default Dispatcher;

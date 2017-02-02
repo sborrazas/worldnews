@@ -1,44 +1,48 @@
-var Base = require("./Base.js")
-  , classes = require("../../utils/classes.js")
-  , ajax = require("../../utils/ajax.js")
-  , collection = require("../../utils/collection.js")
-  , sprintf = require("../../utils/sprintf.js")
-  , serializer = require("../../utils/serializer.js")
-  , settings = require("../../config/settings.js");
+import Base from "./Base.js";
+import classes from "utils/classes.js";
+import ajax from "utils/ajax.js";
+import collection from "utils/collection.js";
+import sprintf from "utils/sprintf.js";
+import serializer from "utils/serializer.js";
+import {
+  DEFAULT_SUBREDDIT,
+  REDDIT_URL,
+  POSTS_PER_PAGE,
+  SUBREDDIT_URL,
+} from "config/settings.js";
 
-module.exports = classes.declare(Base, {
-  loadNext: function () {
-    var self = this
-      , subreddit = settings.DEFAULT_SUBREDDIT
-      , subredditURL = sprintf(settings.SUBREDDIT_URL, subreddit)
-      , params = { limit: settings.POSTS_PER_PAGE }
-      , posts = null;
+class RedditPosts extends Base {
+  loadNext() {
+    const subredditURL = sprintf(SUBREDDIT_URL, DEFAULT_SUBREDDIT);
+    const params = { limit: POSTS_PER_PAGE };
 
     if (this._afterToken) {
       params.after = this._afterToken;
     }
 
-    posts = ajax.get(serializer.encodeURL(subredditURL, params));
+    return ajax
+      .get(serializer.encodeURL(subredditURL, params))
+      .then((postsData) => {
+        const posts = collection.map(postsData.data.children, (postData) => {
+          postData = postData.data;
 
-    return posts.then(function (postsData) {
-      var posts = collection.map(postsData.data.children, function (postData) {
-        postData = postData.data;
+          return {
+            id: postData.name,
+            title: postData.title,
+            redditURL: [REDDIT_URL, postData.permalink].join(""),
+            url: postData.url,
+            commentsCount: postData.num_comments,
+            domainURL: "http://" + postData.domain,
+            domainSlug: postData.domain.replace(/\.com?.*/, "").replace(/\./g, " ")
+          };
+        });
 
-        return {
-          id: postData.name,
-          title: postData.title,
-          redditURL: [settings.REDDIT_URL, postData.permalink].join(""),
-          url: postData.url,
-          commentsCount: postData.num_comments,
-          domainURL: "http://" + postData.domain,
-          domainSlug: postData.domain.replace(/\.com?.*/, "").replace(/\./g, " ")
-        };
+        this._afterToken = postsData.data.after;
+        this._items = this._items.concat(posts);
+
+        return posts;
       });
-
-      self._afterToken = postsData.data.after;
-      self._items = self._items.concat(posts);
-
-      return posts;
-    });
   }
-});
+}
+
+export default RedditPosts;

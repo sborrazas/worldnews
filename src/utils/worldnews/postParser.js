@@ -1,44 +1,45 @@
-var ajax = require("../ajax.js")
-  , serializer = require("../serializer.js")
-  , json = require("../json.js")
-  , sprintf = require("../sprintf.js")
-  , settings = require("../../config/settings.js");
+import sprintf from "../sprintf.js";
+import ajax from "../ajax.js";
+import serializer from "../serializer.js";
+import { OPEN_GRAPH_URL, OPEN_GRAPH_APP_ID } from "config/settings.js";
 
-module.exports = {
-  parse: function (url, cache) {
+const getMetadata = (url) => {
+  const encodedURL = serializer.encodeURI(url)
+  const openGraphURL = sprintf(OPEN_GRAPH_URL, encodedURL);
+  const pageContent = ajax.getCrossOrigin(openGraphURL);
+
+  return pageContent.then(function (content) {
+    var postOGData = content.openGraph;
+
+    return {
+      description: postOGData.description,
+      imageURL: postOGData.image
+    };
+  }, function (aaa) {
+    return {};
+  });
+};
+
+export default {
+  parse: (url, cache) => {
     var val;
 
     if (cache) {
       val = localStorage[url];
+
       if (val) {
-        return Promise.resolve(json.parse(val));
+        return Promise.resolve(JSON.parse(val));
       }
       else {
-        return this._getMetadata(url).then(function (metadata) {
-          localStorage[url] = json.stringify(metadata);
+        return getMetadata(url).then((metadata) => {
+          localStorage[url] = JSON.stringify(metadata);
 
           return metadata;
         });
       }
     }
     else {
-      return this._getMetadata(url);
+      return getMetadata(url);
     }
-  },
-  _getMetadata: function (url) {
-    var encodedURL = serializer.encodeURI(url)
-      , openGraphURL = sprintf(settings.OPEN_GRAPH_URL, encodedURL)
-      , pageContent = ajax.getCrossOrigin(openGraphURL);
-
-    return pageContent.then(function (content) {
-      var postOGData = content.openGraph;
-
-      return {
-        description: postOGData.description,
-        imageURL: postOGData.image
-      };
-    }, function () {
-      return {};
-    });
   }
 };

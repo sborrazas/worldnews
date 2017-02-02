@@ -1,40 +1,42 @@
-var React = require("React")
-  , on = require("../utils/dom/on.js")
-  , domStyle = require("../utils/dom/style.js")
-  , MARGIN_WIDTH = 10;
+import React, { Component } from "react";
 
-module.exports = React.createClass({
-  getInitialState: function () {
-    return {
+var on = require("../utils/dom/on.js");
+
+const MARGIN_WIDTH = 10;
+
+class Post extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
       columnIndex: 0,
-      spacingTop: 0
+      imageMarginTop: 0,
+      spacingTop: 0,
     };
-  },
-  render: function () {
-    var post = this.props.post
-      , postFigure = null
-      , style = null;
+  }
+  render() {
+    const { imageMarginTop, columnIndex, spacingTop } = this.state;
+    const { post, width } = this.props;
 
-    if (post.imageURL) {
-      postFigure = (
-        <figure className="card-figure" ref="figure">
-          <a href={post.url} target="_blank">
-            <img className="card-image" src={post.imageURL} alt={post.title}
-                 ref="image" />
-          </a>
-        </figure>
-      );
-    }
-
-    style = {
-      width: (this.props.width - MARGIN_WIDTH * 2),
-      left: (this.state.columnIndex * this.props.width + MARGIN_WIDTH),
-      top: this.state.spacingTop
+    const style = {
+      width: (width - MARGIN_WIDTH * 2),
+      left: (columnIndex * width + MARGIN_WIDTH),
+      top: spacingTop,
     };
 
     return (
       <article className="cardDashboard-item card" style={style}>
-        {postFigure}
+        {
+          post.imageURL &&
+            (
+              <figure className="card-figure" ref="figure">
+                <a href={post.url} target="_blank">
+                  <img className="card-image" src={post.imageURL} alt={post.title}
+                       style={{ marginTop: imageMarginTop }} />
+                </a>
+              </figure>
+            )
+        }
         <div className="card-content" ref="content">
           <header>
             <a className="card-title" href={post.url} target="_blank">
@@ -59,8 +61,8 @@ module.exports = React.createClass({
         </div>
       </article>
     );
-  },
-  getHeight: function () {
+  }
+  getHeight() {
     var height = this.refs["content"].offsetHeight
       , figure = this.refs["figure"];
 
@@ -71,28 +73,28 @@ module.exports = React.createClass({
     }
 
     return height;
-  },
-  setLayoutPosition: function (columnIndex, spacingTop) {
+  }
+  setLayoutPosition(columnIndex, spacingTop) {
     this.setState({ columnIndex: columnIndex, spacingTop: spacingTop });
-  },
-  componentDidUpdate: function () {
-    var self = this
-      , image = this.refs["image"];
+  }
+  componentDidUpdate() {
+    const { image } = this.refs;
 
     if (image) {
-      on(image, "load", function () {
+      on(image, "load", () => {
         self._repositionImage();
       });
       if (image.complete) {
         self._repositionImage();
       }
     }
-  },
-  _repositionImage: function () {
-    var figureHeight = this.refs["figure"].offsetHeight
-      , image = this.refs["image"]
-      , heightDifference = figureHeight - image.offsetHeight;
-
-    domStyle.set(image, "marginTop", (heightDifference / 2) + "px");
   }
-});
+  _repositionImage() {
+    const { figure } = this.refs;
+    const heightDifference = figure.offsetHeight - image.offsetHeight;
+
+    this.setState({ imageMarginTop: (heightDifference / 2) });
+  }
+}
+
+export default Post;

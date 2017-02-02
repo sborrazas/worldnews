@@ -1,13 +1,13 @@
-var AppDispatcher = require("../dispatchers/AppDispatcher.js")
-  , VIEW_ACTIONS = require("../config/constants.js").VIEW_ACTIONS;
+import AppDispatcher from "../dispatchers/AppDispatcher.js";
+import { VIEW_ACTIONS } from "config/constants.js";
 
-module.exports = {
-  init: function () {
+export default {
+  init: () => {
     AppDispatcher.handleViewAction({
       actionType: VIEW_ACTIONS.INIT
     });
   },
-  scrollEnd: function () {
+  scrollEnd: () => {
     AppDispatcher.handleViewAction({
       actionType: VIEW_ACTIONS.SCROLL_END
     });

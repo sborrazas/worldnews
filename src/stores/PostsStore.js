@@ -1,11 +1,12 @@
-var object = require("../utils/object.js")
-  , AppDispatcher = require("../dispatchers/AppDispatcher.js")
-  , VIEW_ACTIONS = require("../config/constants.js").VIEW_ACTIONS
-  , Store = require("../utils/Store.js")
-  , collection = require("../utils/collection.js")
-  , postParser = require("../utils/worldnews/postParser.js")
-  , RedditPosts = require("./collections/RedditPosts.js")
-  , store = new Store(AppDispatcher);
+import Store from "utils/Store.js";
+import RedditPosts from "./collections/RedditPosts.js";
+import AppDispatcher from "../dispatchers/AppDispatcher.js";
+import postParser from "utils/worldnews/postParser.js";
+import collection from "utils/collection.js";
+import object from "utils/object.js";
+import { VIEW_ACTIONS } from "config/constants.js";
+
+const store = new Store(AppDispatcher);
 
 object.extends(store, {
   getPosts: function () {
@@ -50,13 +51,12 @@ object.extends(store, {
       collection.each(posts, function (_, post) {
         self._getPostInfo(post);
       });
+      self._isLoading = false;
+      self.emit("change");
     });
 
     nextPosts.catch(function () { // TODO: Better handling (alert message?)
       alert("An error ocurred while trying to load posts from Reddit.");
-    });
-
-    nextPosts.always(function () {
       self._isLoading = false;
       self.emit("change");
     });
@@ -72,4 +72,4 @@ object.extends(store, {
   }
 });
 
-module.exports = store;
+export default store;

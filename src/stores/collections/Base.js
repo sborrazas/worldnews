@@ -1,11 +1,10 @@
-var classes = require("../../utils/classes.js")
-  , collection = require("../../utils/collection.js");
-
-module.exports = classes.declare(null, {
-  initialize: function () {
+class Base {
+  constructor() {
     this._items = [];
-  },
-  getItems: function () {
+  }
+  getItems() {
     return this._items;
   }
-});
+}
+
+export default Base;

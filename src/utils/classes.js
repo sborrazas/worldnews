@@ -1,7 +1,7 @@
-var object = require("./object.js");
+import object from "./object.js";
 
-module.exports = {
-  declare: function (Parent, childProperties) {
+export default {
+  declare: (Parent, childProperties) => {
     var Class = function () {
       if (childProperties.initialize) {
         childProperties.initialize.apply(this, arguments);

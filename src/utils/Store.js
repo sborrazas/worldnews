@@ -1,8 +1,11 @@
-var classes = require("./classes.js")
-  , EventEmitter = require("./events.js").EventEmitter;
+import { EventEmitter } from "./events.js";
 
-module.exports = classes.declare(EventEmitter, {
-  initialize: function (dispatcher) {
+class Store extends EventEmitter {
+  constructor(dispatcher) {
+    super();
+
     this._dispatcher = dispatcher;
   }
-});
+}
+
+export default Store;

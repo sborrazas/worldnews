@@ -1,9 +1,4 @@
 var path = require("path");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var WebpackIsomorphicToolsPlugin = require("webpack-isomorphic-tools/plugin");
-var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(
-  require("./webpack.isomorphictools.config.js")
-);
 
 module.exports = {
   entry: path.join(__dirname, "src", "index.js"),
@@ -13,9 +8,9 @@ module.exports = {
   resolve: {
     extensions: ["", ".js", ".jsx"],
     alias: {
-      components: path.join(__dirname, "src", "components"),
-      config: path.join(__dirname, "src", "config"),
-      utils: path.join(__dirname, "src", "utils"),
+      "components": path.join(__dirname, "src", "components"),
+      "config": path.join(__dirname, "src", "config"),
+      "utils": path.join(__dirname, "src", "utils"),
     }
   },
   output: {
@@ -35,41 +30,29 @@ module.exports = {
       },
       {
         test: /\.less$/,
-        loader: ExtractTextPlugin.extract(
-          "style",
-          "css!less"
-        ),
-      },
-      {
-        test: webpackIsomorphicToolsPlugin.regular_expression("images"),
-        loader: "url-loader?limit=153600",
+        loader: "style!css?importLoaders=2&localIdentName=[local]___[hash:base64:5]!autoprefixer?browsers=last 2 version!less?outputStyle=expanded",
       },
       // FONTS
       {
         test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "url?limit=10000&mimetype=application/font-woff"
+        loader: "url?limit=10000&mimetype=application/font-woff&publicPath=/fonts/&outputPath=fonts/"
       },
       {
         test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "url?limit=10000&mimetype=application/font-woff"
+        loader: "url?limit=10000&mimetype=application/font-woff&publicPath=/fonts/&outputPath=fonts/"
       },
       {
         test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "url?limit=10000&mimetype=application/octet-stream"
+        loader: "url?limit=10000&mimetype=application/octet-stream&publicPath=/fonts/&outputPath=fonts/"
       },
-      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file" },
+      {
+        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "file?publicPath=/fonts/&outputPath=fonts/"
+      },
       {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "url?limit=10000&mimetype=image/svg+xml"
+        loader: "url?limit=10000&mimetype=image/svg+xml&publicPath=/fonts/&outputPath=fonts/"
       },
     ],
   },
-  plugins: [
-    new ExtractTextPlugin(
-      path.join("stylesheets", "[name].css"),
-      {
-        allChunks: true,
-      }
-    ),
-  ],
 };
