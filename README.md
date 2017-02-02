@@ -14,7 +14,7 @@ npm install
 
 ```
 npm run start # Assets watching
-python3 -m http.server # Server
+(cd public && python3 -m http.server) # Server
 ```
 
 Go to [http://localhost:8000](http://localhost:8000).
@@ -26,8 +26,7 @@ Go to [http://localhost:8000](http://localhost:8000).
 First clone the repo and install all Ansible extensions.
 
 ```
-git clone git@github.com:sborrazas/fandf.git
-ansible-galaxy install -r ansible/requirements.yml
+git clone git@github.com:sborrazas/worldnews.git
 ```
 
 ## Provision & deploy
@@ -48,7 +47,7 @@ Make sure the production configuration file is complete, then run the provision
 or deploy Ansible playbooks.
 
 ```
-make provision-production
+make provision
 # or
-make deploy-production
+make deploy
 ```
