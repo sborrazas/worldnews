@@ -1,15 +1,16 @@
 ---
 - hosts: all
-  remote_user: "{{ user }}"
+  remote_user: "{{ root_user }}"
   roles:
-    - role: "gaqzi.ssh-config"
-    - role: "common"
-    - role: "common.remote"
-    - role: "webserver"
+    - role: common.remote
+      tags:
+        -  remote
 
 - hosts: all
   remote_user: "{{ user }}"
-  vars:
-    repo_version: "master"
   roles:
-    - role: "deploy"
+    - role: common
+    - role: webserver
+      static: True
+
+- include: deploy.yml

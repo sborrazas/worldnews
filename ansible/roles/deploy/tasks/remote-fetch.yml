@@ -1,8 +1,0 @@
----
-- name: "remote-fetch | repo present"
-  git:
-    repo: "{{ repo }}"
-    dest: "{{ release_dir }}"
-    version: "{{ repo_version }}"
-    key_file: "{{ private_key_path }}"
-    accept_hostkey: yes

@@ -3,5 +3,56 @@
   remote_user: "{{ user }}"
   vars:
     repo_version: "master"
-  roles:
-    - role: "deploy"
+  tasks:
+    - set_fact:
+        release_version: "{{ lookup('pipe', 'date +%Y%m%d%H%M%S') }}"
+
+    - set_fact:
+        release_dir: "{{ base_dir }}/current"
+
+    - set_fact:
+        release_dir: "{{ base_dir }}/releases/{{ release_version }}"
+      tags:
+        - remote
+
+    - name: project directories exist
+      file:
+        state: directory
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        path: "{{ item.path }}"
+        recurse: True
+      with_items:
+        - { path: "{{ base_dir }}", sudo: True }
+        - { path: "{{ base_dir }}/releases", sudo: False }
+      become: "{{ item.sudo }}"
+
+    - name: repo present with specified version
+      git:
+        repo: "{{ repo }}"
+        dest: "{{ release_dir }}"
+        version: "{{ repo_version }}"
+        key_file: "{{ private_key_path }}"
+      tags:
+        - remote
+
+    - include_role:
+        name: deploy.assets
+      vars:
+        source_dir: "{{ playbook_dir | dirname }}/public"
+        dest_dir: "{{ release_dir }}/public"
+        files:
+          - index.js
+          - stylesheets/
+          - fonts/
+          - index.html
+      tags:
+        - remote
+
+    - name: symlink to app directoy exists
+      file:
+        state: link
+        src: "{{ release_dir }}"
+        dest: "{{ app_dir }}"
+      tags:
+        - remote

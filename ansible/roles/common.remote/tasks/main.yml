@@ -1,4 +1,0 @@
----
-- include: sudoers.yml
-- include: ssh.yml
-- include: hostname.yml
