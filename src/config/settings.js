@@ -8,4 +8,4 @@ export const NAME = "WORLDNEWS";
 export const TAGLINE = "Popular news curated by Reddit - Made by Form & Function";
 export const DESCRIPTION = "Enjoy the most popular news of the day curated by the Reddit Community.";
 export const KEYWORDS = "worldnews, news, reddit, popular, politics, economy, client, alternative";
-export const AUTHORS = "Flatten";
+export const AUTHORS = "Sebastian Borrazas, Santiago Alonso",
